@@ -1,5 +1,12 @@
+try:
+    from .color import print_colored
+except ImportError:
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from source.color import print_colored
+
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoTokenizer, pipeline
-from color import print_colored
 import logging
 import torch
 import gc
@@ -127,7 +134,20 @@ class LlmGenerator:
         return 0
 
 if __name__ == "__main__":
-    model_path = r"X:\Path\To\HuggingFace\Model"
+    from dotenv import load_dotenv
+    import os
+    from pathlib import Path
+
+    parent_dir = Path(__file__).parent.parent
+    env_path = parent_dir / '.env'
+
+    load_dotenv(env_path)
+
+    model_path = os.getenv("MODEL_PATH")
+    if not model_path:
+        print_colored("ERROR: MODEL_PATH not set in .env file", 'error')
+        sys.exit(1)
+
     generator = LlmGenerator(model_path)
 
     try:

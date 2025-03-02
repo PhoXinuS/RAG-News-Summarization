@@ -6,7 +6,7 @@ from datetime import datetime, date
 import json
 import time
 import os
-from color import print_colored
+from .color import print_colored
 
 
 def _generate_target_years(start_date: date, end_date: date) -> List[str]:
@@ -71,8 +71,11 @@ def _process_table_row(row, target_years: List[str],
 class Scraper:
     def __init__(self):
         self._init_driver()
-        self.output_dir = "scraped_articles"
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.output_dir = os.path.join(os.path.dirname(current_dir), "data", "scraped_articles")
         os.makedirs(self.output_dir, exist_ok=True)
+        print_colored(f"Articles will be saved to: {self.output_dir}", "context")
+
 
     def _init_driver(self):
         options = Options()

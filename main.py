@@ -1,36 +1,28 @@
-from rag import AdvancedRAG
-from scraper import Scraper
-from articler import process_text_file, process_json_file
-from color import print_colored
-from datetime import date, datetime, timedelta
+from source.rag import AdvancedRAG
+from source.scraper import Scraper
+from source.articler import process_text_file, process_json_file
+from source.color import print_colored
+from datetime import date, timedelta
+from dotenv import load_dotenv
+import os
 
 def main():
-    model_path = r"X:\llm-fun\pip-test\ConvertedLlama1BInstruct"
+    load_dotenv()
+    model_path = os.getenv("MODEL_PATH")
 
-    articles = [
-        {
-            'title': 'Recipe for coffee jelly dessert',
-            'paragraphs': [
-                'Coffee jelly (コーヒーゼリー, kōhī zerī) is a jelly dessert flavored with coffee and sugar.[1][2] Although once common in British and American cookbooks, it is now most common in Japan, where it can be found in most restaurants and convenience stores. Coffee jelly can be made using instant mix or from scratch. It is served in restaurants and cafés. Coffee jelly is also frequently used in bubble tea/coffees.',
-                'In the early 20th century coffee jelly was promoted as a healthier alternative to hot coffee, as it was thought the gelatin would absorb excess acid in the stomach.[7]',
-                'Jell-O launched a short lived coffee gelatin mix in 1918,[8] but the dessert never gained widespread popularity outside of New England. Today, coffee jelly may still be found in Rhode Island, Massachusetts and other New England states. Durgin-Park restaurant in Boston, which opened in 1827, still offered coffee gelatin made with leftover coffee from the previous day as of 2016.[9]',
-                'Japanese coffee jelly was developed during the Taishō period (1912–1926)[10] in imitation of European molded jellies. It appealed to modern young men with tastes for Western fashion and rose in popularity along with café culture.[10] Coffee jelly has remained popular in Japan and is still widely available. Starbucks launched a coffee jelly frappuccino in Japan in 2016.[11][12]',
-                'Description: Coffee jelly is made from sweetened coffee added to agar, a gelatinous substance made from algae and called kanten in Japanese.[10] It may also be made from gelatin rather than agar, which is more common in European and American cuisine.',
-                'It is often cut into cubes and served in a variety of dessert dishes and beverages. Cubes of coffee jelly are sometimes added to milkshakes, at the bottom of an ice cream float, or to garnish an ice cream sundae. Coffee jelly is often added to a cup of hot or iced coffee, with cream and gum syrup added. Condensed milk is poured over cubes of chilled coffee jelly in a bowl.[13]',
-                'Popular Culture: Coffee jelly has appeared numerous times in the manga and anime series The Disastrous Life of Saiki K., in which it is the main character Saiki Ks favorite food.'
-            ]
-        }
-    ]
-
-    overwatch_text = process_text_file(r".\Overwatch_Article.txt")
+    articles = []
+    overwatch_text = process_text_file(r".\data\Overwatch_Article.txt")
     articles.append(overwatch_text)
 
-    tanenbaum_text = process_text_file(r".\Minix_Bible.txt")
+    tanenbaum_text = process_text_file(r".\data\Minix_Bible.txt")
     articles.append(tanenbaum_text)
 
     scraper = Scraper()
     yesterday = date.today() - timedelta(days=1)
-    scraped_articles_output = scraper.scrape(yesterday)
+    today = date.today()
+    print_colored(f"Fetching articles from {yesterday} to {today}", 'context')
+
+    scraped_articles_output = scraper.scrape(yesterday, today)
     process_geekwire_articles = process_json_file(scraped_articles_output)
     articles.extend(process_geekwire_articles)
 
