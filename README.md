@@ -4,6 +4,10 @@
 
 The AI-powered tool, developed for the GOLEM Machine Learning Student Scientific Association, that uses **Retrieval-Augmented Generation (RAG)** to scrape and summarize the latest tech news from GeekWire.
 
+## Authors
+- **Piotr Szkoda** ([GitHub](https://github.com/PhoXinuS))
+- **Martyna Kochalska** ([GitHub](https://github.com/pyskaa0506))
+
 ## Technologies Used
 
 -   **Language Models**: [Qwen 2.5 3B Instruct](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)
